@@ -46,18 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Release
-        uses: cycjimmy/semantic-release-action@v6
-        id: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Attest
-        if: steps.release.outputs.new_release_published == 'true'
-        uses: actions/attest-build-provenance@v3
+      - name: Upload Patches Artifact
+        uses: actions/upload-artifact@v4
         with:
-          subject-name: 'Morphe Patches ${{ steps.release.outputs.new_release_git_tag }}'
-          subject-path: patches/build/libs/patches-*.mpp
+          name: morphe-patches-output
+          # Dùng ký tự ** để quét file .jar và .mpp ở mọi thư mục con, tránh việc sai lệch đường dẫn
+          path: |
+            **/*.mpp
 
       - name: Purge jsDelivr Cache
         run: |
