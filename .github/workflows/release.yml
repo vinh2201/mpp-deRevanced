@@ -17,6 +17,8 @@ jobs:
       attestations: write
       actions: write
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,6 +34,9 @@ jobs:
       - name: Cache Gradle
         uses: burrunan/gradle-cache-action@v3
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,11 +51,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Upload Patches Artifact
+      - name: Release
         uses: actions/upload-artifact@v4
         with:
           name: morphe-patches-output
-          # Dùng ký tự ** để quét file .jar và .mpp ở mọi thư mục con, tránh việc sai lệch đường dẫn
+          # Dùng ký tự ** để quét file .jar và .rvp ở mọi thư mục con, tránh việc sai lệch đường dẫn
           path: |
             **/*.mpp
 
